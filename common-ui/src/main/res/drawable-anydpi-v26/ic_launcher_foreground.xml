@@ -1,0 +1,30 @@
+<!--
+  ~ Copyright 2023 Squircle CE contributors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+  <group>
+    <clip-path
+        android:pathData="M200,0H0V200H200V0Z"/>
+    <path
+        android:pathData="M60,99.6L75.84,83.76L84.35,92.26L77.01,99.6L99.64,122.22L106.97,114.89L115.44,123.36L99.6,139.2L60,99.6ZM115.46,106.41L123.92,114.87L139.2,99.6L99.6,60L84.33,75.27L92.83,83.78L99.64,76.97L122.27,99.6L115.46,106.41Z"
+        android:fillColor="#ffffff"
+        android:fillType="evenOdd"/>
+  </group>
+</vector>

@@ -1,0 +1,1 @@
+A fast multi-language code editor and file manager for Android
