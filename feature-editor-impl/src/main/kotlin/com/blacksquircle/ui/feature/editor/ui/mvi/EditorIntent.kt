@@ -44,6 +44,8 @@ sealed class EditorIntent : ViewIntent() {
     object ForceSyntax : EditorIntent()
     data class ForceSyntaxHighlighting(val languageName: String) : EditorIntent()
 
+    object CodeRun : EditorIntent()
+
     data class SaveFile(
         val local: Boolean,
         val unselected: Boolean,

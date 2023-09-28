@@ -41,6 +41,12 @@ jobs:
       - name: Check Kotlin code style
         run: ./gradlew ktlint
 
+      - name: Upload Debug APK (Baidu)
+        uses: actions/upload-artifact@v3
+        with:
+          name: Baidu App (Debug)
+          path: ./app/build/outputs/apk/baidu/debug/app-baidu-debug.apk
+
       - name: Upload Debug APK (Google Play)
         uses: actions/upload-artifact@v3
         with:

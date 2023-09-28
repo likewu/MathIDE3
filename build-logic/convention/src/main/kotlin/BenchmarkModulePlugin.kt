@@ -43,7 +43,7 @@ class BenchmarkModulePlugin : Plugin<Project> {
 
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-                    missingDimensionStrategy("store", "fdroid")
+                    missingDimensionStrategy("store", "baidu")
                 }
                 buildTypes {
                     create("benchmark") {

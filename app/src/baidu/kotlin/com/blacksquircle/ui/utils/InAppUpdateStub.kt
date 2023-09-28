@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package com.blacksquircle.ui.language.base.parser
+package com.blacksquircle.ui.utils
 
-import com.blacksquircle.ui.language.base.exception.ParseException
-import com.blacksquircle.ui.language.base.model.ParseResult
-import com.blacksquircle.ui.language.base.model.TextStructure
-import java.io.File
+import android.app.Activity
+import timber.log.Timber
 
-interface LanguageParser {
-    fun execute(structure: TextStructure): ParseResult
-    fun execute(name: String, source: String, path: String, extRootDir: File?): ParseResult {
-        val parseException = ParseException("Unable to run unsupported language", 0, 0)
-        return ParseResult(parseException)
+class InAppUpdateStub : InAppUpdate {
+
+    override fun checkForUpdates(activity: Activity, onComplete: () -> Unit) {
+        Timber.d("checkForUpdates")
+    }
+
+    override fun completeUpdate() {
+        Timber.d("completeUpdate")
     }
 }

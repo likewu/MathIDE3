@@ -17,6 +17,7 @@
 plugins {
     id("language-module")
     id("publish-module")
+    //id("com.android.library")
 }
 
 publishModule {
@@ -29,4 +30,5 @@ dependencies {
 
     // Modules
     api(project(":editorkit:language-base"))
+    //implementation(libs.androidx.core)
 }

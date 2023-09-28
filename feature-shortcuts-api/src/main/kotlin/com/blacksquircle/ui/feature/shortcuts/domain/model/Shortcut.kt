@@ -42,6 +42,7 @@ enum class Shortcut(val key: String, val defaultValue: String) {
     FIND("shortcut_find", "100F"), // Ctrl + F
     REPLACE("shortcut_replace", "100R"), // Ctrl + R
     GOTO_LINE("shortcut_goto_line", "100G"), // Ctrl + G
+    CODE_RUN("shortcut_code_run", "000\u0000"), // None set
     FORCE_SYNTAX("shortcut_force_syntax", "000\u0000"), // None set
     INSERT_COLOR("shortcut_insert_color", "000\u0000") // None set
 }

@@ -46,8 +46,9 @@ class ApplicationModulePlugin : Plugin<Project> {
                 }
                 setFlavorDimensions(listOf("store"))
                 productFlavors {
-                    create("googlePlay") { dimension = "store" }
-                    create("fdroid") { dimension = "store" }
+                    //create("googlePlay") { dimension = "store" }
+                    //create("fdroid") { dimension = "store" }
+                    create("baidu") { dimension = "store" }
                 }
                 val properties = Properties().apply {
                     val localFile = rootProject.file("local.properties")
@@ -90,12 +91,15 @@ class ApplicationModulePlugin : Plugin<Project> {
                     named("androidTest") {
                         java.srcDir("src/androidTest/kotlin")
                     }
-                    named("fdroid") {
+                    named("baidu") {
+                        java.srcDir("src/baidu/kotlin")
+                    }
+                    /*named("fdroid") {
                         java.srcDir("src/fdroid/kotlin")
-                    }
-                    named("googlePlay") {
+                    }*/
+                    /*named("googlePlay") {
                         java.srcDir("src/googlePlay/kotlin")
-                    }
+                    }*/
                     named("main") {
                         java.srcDir("src/main/kotlin")
                     }

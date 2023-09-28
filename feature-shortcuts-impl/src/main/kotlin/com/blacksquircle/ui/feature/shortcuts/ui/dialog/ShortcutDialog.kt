@@ -89,6 +89,7 @@ class ShortcutDialog : DialogFragment() {
                 Shortcut.FIND -> R.string.shortcut_find
                 Shortcut.REPLACE -> R.string.shortcut_replace
                 Shortcut.GOTO_LINE -> R.string.shortcut_goto_line
+                Shortcut.CODE_RUN -> R.string.shortcut_code_run
                 Shortcut.FORCE_SYNTAX -> R.string.shortcut_force_syntax
                 Shortcut.INSERT_COLOR -> R.string.shortcut_insert_color
             }

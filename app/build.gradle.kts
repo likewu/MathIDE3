@@ -19,10 +19,16 @@ plugins {
 }
 
 android {
-    namespace = "com.blacksquircle.ui"
+    //compileSdkVersion = "android-31"
+    //buildToolsVersion = "31"
+
+    namespace = "cn.leafcolor.mathide"
 
     defaultConfig {
-        applicationId = "com.blacksquircle.ui"
+        //minSdk = 31
+        //targetSdk = 33
+
+        applicationId = "cn.leafcolor.mathide"
         versionCode = 10019
         versionName = "2023.1.5"
     }
@@ -43,8 +49,8 @@ dependencies {
     implementation(libs.timber)
 
     // Google Play
-    val googlePlayImplementation by configurations
-    googlePlayImplementation(libs.appupdate)
+    /*val googlePlayImplementation by configurations
+    googlePlayImplementation(libs.appupdate)*/
 
     // UI
     implementation(libs.androidx.appcompat)

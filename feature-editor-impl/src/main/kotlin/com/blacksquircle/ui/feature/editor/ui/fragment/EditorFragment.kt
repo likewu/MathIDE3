@@ -16,9 +16,15 @@
 
 package com.blacksquircle.ui.feature.editor.ui.fragment
 
+import android.app.ActivityManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.view.KeyEvent
 import android.view.View
+import androidx.core.app.TaskStackBuilder
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -28,6 +34,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.afollestad.materialdialogs.MaterialDialog
 import com.blacksquircle.ui.core.adapter.TabAdapter
 import com.blacksquircle.ui.core.contract.ContractResult
 import com.blacksquircle.ui.core.contract.CreateFileContract
@@ -67,6 +74,9 @@ import com.blacksquircle.ui.feature.shortcuts.domain.model.Shortcut
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.io.File
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import com.blacksquircle.ui.uikit.R as UiR
 
 @AndroidEntryPoint
@@ -113,6 +123,8 @@ class EditorFragment : Fragment(R.layout.fragment_editor),
     }
 
     private lateinit var tabAdapter: DocumentAdapter
+
+    private val mathlandDir = File(Environment.getExternalStorageDirectory(), "MathLand")
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -451,6 +463,63 @@ class EditorFragment : Fragment(R.layout.fragment_editor),
         viewModel.obtainEvent(EditorIntent.FindWordsOnly(binding.editor.text))
     }
 
+    override fun onCodeRunButton(): Boolean {
+        viewModel.obtainEvent(EditorIntent.CodeRun)
+        val position = tabAdapter.selectedPosition
+        if (position > -1) {
+            MaterialDialog(requireContext()).show {
+                title(R.string.dialog_title_result)
+                message(R.string.message_runing)
+                (viewModel.viewEvent as com.blacksquircle.ui.core.mvi.ViewEvent.PopBackStack).data?.let { model ->
+                    (model as com.blacksquircle.ui.language.base.model.ParseResult).exception?.let {
+                        message(text = it.message)
+                    }
+
+                    if ((model as com.blacksquircle.ui.language.base.model.ParseResult).exception==null) {
+                        val resultIntent = Intent();
+                        resultIntent.setClassName("cn.leafcolor.mathland", "cn.leafcolor.mathland.MainActivity");
+                        val cmpName: ComponentName = resultIntent.resolveActivity(context.getPackageManager())
+                        var flag = false
+                        if (cmpName != null) {
+                            val am: ActivityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager;
+                            val taskInfoList: List<ActivityManager.RunningTaskInfo> = am.getRunningTasks (10);
+                            for (taskInfo: ActivityManager.RunningTaskInfo in taskInfoList) {
+                                if (taskInfo.baseActivity!!.equals(cmpName)) {
+                                    flag = true;
+                                    break;
+                                }
+                            }
+                        }
+                        val bundle = Bundle()
+                        bundle.putString("CODE_LANGUAGE", binding.editor.language?.languageName)
+                        bundle.putString("CODE_FILE_PATH", tabAdapter.currentList[tabAdapter.selectedPosition].path.replace(mathlandDir.absolutePath, ""))
+                        resultIntent.putExtras(bundle)
+                        if (flag) {
+                            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(resultIntent);
+                        } else {
+                            resultIntent.getComponent()?.let {
+                                TaskStackBuilder.create(this@EditorFragment.requireContext())
+                                    .addParentStack(it)
+                                    .addNextIntent(resultIntent)
+                                    .startActivities()
+                            };
+                        }
+
+                        val scheduledExecutor = Executors.newSingleThreadScheduledExecutor()
+                        scheduledExecutor.schedule(Runnable {
+                            dismiss()
+                        }, 10000, TimeUnit.MILLISECONDS)
+                    }
+                }
+                positiveButton(R.string.action_ok)
+            }
+        } else {
+            context?.showToast(R.string.message_no_open_files)
+        }
+        return true
+    }
+
     override fun onForceSyntaxButton(): Boolean {
         viewModel.obtainEvent(EditorIntent.ForceSyntax)
         return true
@@ -564,6 +633,7 @@ class EditorFragment : Fragment(R.layout.fragment_editor),
                                 Shortcut.FIND -> onOpenFindButton()
                                 Shortcut.REPLACE -> onOpenReplaceButton()
                                 Shortcut.GOTO_LINE -> onGoToLineButton()
+                                Shortcut.CODE_RUN -> onCodeRunButton()
                                 Shortcut.FORCE_SYNTAX -> onForceSyntaxButton()
                                 Shortcut.INSERT_COLOR -> onInsertColorButton()
                                 else -> when (keyCode) {

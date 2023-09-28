@@ -34,7 +34,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/SplashTheme"
-        android:name=".SquircleApp"
+        android:name="cn.leafcolor.mathide.SquircleApp"
         android:requestLegacyExternalStorage="true"
         tools:replace="android:theme">
 
@@ -182,6 +182,8 @@
 
             <data android:mimeType="*/*" />
         </intent>
+        <package android:name="tech.ula" />
+        <package android:name="cn.leafcolor.mathland" />
     </queries>
 
 </manifest>

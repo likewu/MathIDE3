@@ -88,6 +88,7 @@ class ToolbarManager(
             R.id.action_words_only -> listener.onFindWordsOnlyButton()
 
             // Tools Menu
+            R.id.action_code_run -> listener.onCodeRunButton()
             R.id.action_force_syntax -> listener.onForceSyntaxButton()
             R.id.action_insert_color -> listener.onInsertColorButton()
 
@@ -227,6 +228,7 @@ class ToolbarManager(
         fun onFindMatchCaseButton()
         fun onFindWordsOnlyButton()
 
+        fun onCodeRunButton(): Boolean
         fun onForceSyntaxButton(): Boolean
         fun onInsertColorButton(): Boolean
 

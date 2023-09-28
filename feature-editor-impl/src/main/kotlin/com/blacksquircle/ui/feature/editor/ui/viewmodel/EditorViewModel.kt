@@ -16,6 +16,7 @@
 
 package com.blacksquircle.ui.feature.editor.ui.viewmodel
 
+import android.os.Environment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blacksquircle.ui.core.extensions.*
@@ -106,6 +107,8 @@ class EditorViewModel @Inject constructor(
 
             is EditorIntent.ForceSyntax -> forceSyntax()
             is EditorIntent.ForceSyntaxHighlighting -> forceSyntaxHighlighting(event)
+
+            is EditorIntent.CodeRun -> codeRun()
 
             is EditorIntent.SaveFile -> saveFile(event)
             is EditorIntent.SaveFileAs -> saveFileAs(event)
@@ -456,6 +459,23 @@ class EditorViewModel @Inject constructor(
                     val document = documents[selectedPosition]
                     val screen = EditorScreen.ForceSyntaxDialog(document.language.languageName)
                     _viewEvent.send(ViewEvent.Navigation(screen))
+                }
+            } catch (e: Exception) {
+                Timber.e(e, e.message)
+                _viewEvent.send(ViewEvent.Toast(e.message.orEmpty()))
+            }
+        }
+    }
+
+    private fun codeRun() {
+        viewModelScope.launch {
+            try {
+                if (selectedPosition > -1) {
+                    val document = documents[selectedPosition]
+                    val parser = document.language.getParser()
+                    val parseResult = parser.execute(document.name, "", document.path, Environment.getExternalStorageDirectory())
+                    if(parseResult.exception!=null) throw Exception(parseResult.exception)
+                    _viewEvent.send(ViewEvent.PopBackStack(parseResult))
                 }
             } catch (e: Exception) {
                 Timber.e(e, e.message)
