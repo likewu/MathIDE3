@@ -29,6 +29,11 @@
         app:iconTint="?colorOnSurfaceVariant">
         <menu>
             <item
+                android:id="@+id/action_code_run"
+                android:title="@string/action_code_run"
+                android:icon="@drawable/ic_tools"
+                app:iconTint="?colorOnSurfaceVariant"/>
+            <item
                 android:id="@+id/action_force_syntax"
                 android:title="@string/action_force_syntax"
                 android:icon="@drawable/ic_marker"

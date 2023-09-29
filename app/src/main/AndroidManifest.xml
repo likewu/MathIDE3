@@ -39,7 +39,7 @@
         tools:replace="android:theme">
 
         <activity
-            android:name=".application.activity.MainActivity"
+            android:name="com.blacksquircle.ui.application.activity.MainActivity"
             android:windowSoftInputMode="adjustResize"
             android:configChanges="keyboard|keyboardHidden"
             android:launchMode="singleTask"

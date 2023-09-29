@@ -475,7 +475,7 @@ class EditorViewModel @Inject constructor(
                     val parser = document.language.getParser()
                     val parseResult = parser.execute(document.name, "", document.path, Environment.getExternalStorageDirectory())
                     if(parseResult.exception!=null) throw Exception(parseResult.exception)
-                    _viewEvent.send(ViewEvent.PopBackStack(parseResult))
+                    _viewEvent.send(EditorViewEvent.CodeRun(parseResult))
                 }
             } catch (e: Exception) {
                 Timber.e(e, e.message)

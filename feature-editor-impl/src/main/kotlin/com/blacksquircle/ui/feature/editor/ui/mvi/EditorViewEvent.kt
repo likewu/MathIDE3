@@ -18,10 +18,12 @@ package com.blacksquircle.ui.feature.editor.ui.mvi
 
 import com.blacksquircle.ui.core.mvi.ViewEvent
 import com.blacksquircle.ui.editorkit.model.FindResult
+import com.blacksquircle.ui.language.base.model.ParseResult
 
 sealed class EditorViewEvent : ViewEvent() {
 
     data class FindResults(val results: List<FindResult>) : EditorViewEvent()
     data class InsertColor(val color: String) : EditorViewEvent()
     data class GotoLine(val line: Int) : EditorViewEvent()
+    data class CodeRun(val parseResult: ParseResult) : EditorViewEvent()
 }

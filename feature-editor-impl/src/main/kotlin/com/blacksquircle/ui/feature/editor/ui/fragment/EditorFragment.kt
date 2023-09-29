@@ -71,6 +71,7 @@ import com.blacksquircle.ui.feature.editor.ui.mvi.*
 import com.blacksquircle.ui.feature.editor.ui.viewmodel.EditorViewModel
 import com.blacksquircle.ui.feature.shortcuts.domain.model.Keybinding
 import com.blacksquircle.ui.feature.shortcuts.domain.model.Shortcut
+import com.blacksquircle.ui.language.base.model.ParseResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -288,6 +289,7 @@ class EditorFragment : Fragment(R.layout.fragment_editor),
                     } catch (e: Exception) {
                         context?.showToast(R.string.message_line_not_exists)
                     }
+                    is EditorViewEvent.CodeRun -> codeRun(event.parseResult)
                 }
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
@@ -465,59 +467,60 @@ class EditorFragment : Fragment(R.layout.fragment_editor),
 
     override fun onCodeRunButton(): Boolean {
         viewModel.obtainEvent(EditorIntent.CodeRun)
+        return true
+    }
+
+    fun codeRun(parseResult: ParseResult) {
         val position = tabAdapter.selectedPosition
         if (position > -1) {
             MaterialDialog(requireContext()).show {
                 title(R.string.dialog_title_result)
                 message(R.string.message_runing)
-                (viewModel.viewEvent as com.blacksquircle.ui.core.mvi.ViewEvent.PopBackStack).data?.let { model ->
-                    (model as com.blacksquircle.ui.language.base.model.ParseResult).exception?.let {
-                        message(text = it.message)
-                    }
+                parseResult.exception?.let {
+                    message(text = it.message)
+                }
 
-                    if ((model as com.blacksquircle.ui.language.base.model.ParseResult).exception==null) {
-                        val resultIntent = Intent();
-                        resultIntent.setClassName("cn.leafcolor.mathland", "cn.leafcolor.mathland.MainActivity");
-                        val cmpName: ComponentName = resultIntent.resolveActivity(context.getPackageManager())
-                        var flag = false
-                        if (cmpName != null) {
-                            val am: ActivityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager;
-                            val taskInfoList: List<ActivityManager.RunningTaskInfo> = am.getRunningTasks (10);
-                            for (taskInfo: ActivityManager.RunningTaskInfo in taskInfoList) {
-                                if (taskInfo.baseActivity!!.equals(cmpName)) {
-                                    flag = true;
-                                    break;
-                                }
+                if (parseResult.exception==null) {
+                    val resultIntent = Intent();
+                    resultIntent.setClassName("cn.leafcolor.mathland", "cn.leafcolor.mathland.MainActivity");
+                    val cmpName: ComponentName = resultIntent.resolveActivity(context.getPackageManager())
+                    var flag = false
+                    if (cmpName != null) {
+                        val am: ActivityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager;
+                        val taskInfoList: List<ActivityManager.RunningTaskInfo> = am.getRunningTasks (10);
+                        for (taskInfo: ActivityManager.RunningTaskInfo in taskInfoList) {
+                            if (taskInfo.baseActivity!!.equals(cmpName)) {
+                                flag = true;
+                                break;
                             }
                         }
-                        val bundle = Bundle()
-                        bundle.putString("CODE_LANGUAGE", binding.editor.language?.languageName)
-                        bundle.putString("CODE_FILE_PATH", tabAdapter.currentList[tabAdapter.selectedPosition].path.replace(mathlandDir.absolutePath, ""))
-                        resultIntent.putExtras(bundle)
-                        if (flag) {
-                            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(resultIntent);
-                        } else {
-                            resultIntent.getComponent()?.let {
-                                TaskStackBuilder.create(this@EditorFragment.requireContext())
-                                    .addParentStack(it)
-                                    .addNextIntent(resultIntent)
-                                    .startActivities()
-                            };
-                        }
-
-                        val scheduledExecutor = Executors.newSingleThreadScheduledExecutor()
-                        scheduledExecutor.schedule(Runnable {
-                            dismiss()
-                        }, 10000, TimeUnit.MILLISECONDS)
                     }
+                    val bundle = Bundle()
+                    bundle.putString("CODE_LANGUAGE", binding.editor.language?.languageName)
+                    bundle.putString("CODE_FILE_PATH", tabAdapter.currentList[tabAdapter.selectedPosition].path.replace(mathlandDir.absolutePath, ""))
+                    resultIntent.putExtras(bundle)
+                    if (flag) {
+                        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(resultIntent);
+                    } else {
+                        resultIntent.getComponent()?.let {
+                            TaskStackBuilder.create(this@EditorFragment.requireContext())
+                                .addParentStack(it)
+                                .addNextIntent(resultIntent)
+                                .startActivities()
+                        };
+                    }
+
+                    val scheduledExecutor = Executors.newSingleThreadScheduledExecutor()
+                    scheduledExecutor.schedule(Runnable {
+                        dismiss()
+                    }, 10000, TimeUnit.MILLISECONDS)
                 }
                 positiveButton(R.string.action_ok)
             }
         } else {
             context?.showToast(R.string.message_no_open_files)
         }
-        return true
     }
 
     override fun onForceSyntaxButton(): Boolean {

@@ -161,6 +161,12 @@
     <PreferenceCategory android:title="@string/pref_category_tools_keybindings">
 
         <Preference
+            android:key="shortcut_code_run"
+            android:title="@string/shortcut_code_run"
+            android:summary="@string/shortcut_none"
+            tools:summary="@string/shortcut_none" />
+
+        <Preference
             android:key="shortcut_force_syntax"
             android:title="@string/shortcut_force_syntax"
             android:summary="@string/shortcut_none"
